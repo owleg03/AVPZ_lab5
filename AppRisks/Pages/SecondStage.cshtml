@@ -1,0 +1,213 @@
+﻿@page
+@model AppRisks.Pages.SecondStage
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Stage 1.1";
+}
+
+<div asp-validation-summary="All" class="py-2 text-danger"></div>
+
+<form id="cat-form" asp-page-handler="Category">
+    @Html.DropDownListFor(
+        m => m.FirstStageSection,
+        new SelectListItem[]
+        {
+            new(SecondStage.FirstStageSection1, SecondStage.FirstStageSection1),
+            new(SecondStage.FirstStageSection2, SecondStage.FirstStageSection2)
+        },
+        new { @class = "form-select mb-3 cat-form-input" }
+    )
+</form>
+
+<form id="second-stage-form" asp-page-handler="Values">
+    <input asp-for="FirstStageSection" readonly hidden/>
+    <table class="table">
+        <thead>
+        <tr style="background-color: #0d6efd">
+            <th>Назва</th>
+            <th>Вага</th>
+            @if (Model.FirstStageSection == SecondStage.FirstStageSection2)
+            {
+                <th>Вартість</th>
+            }
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+            <th>10</th>
+            <th>&sum;</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+            <th>10</th>
+            @if (Model.FirstStageSection == SecondStage.FirstStageSection1)
+            {
+                <th>Ймовірність</th>
+                <th>Статус ймовірності</th> 
+            }
+            else
+            {
+                <th>Додаткова вартість</th>
+                <th>Кінцева вартість</th>
+                <th>Статус вартості</th>
+            }
+        </tr>
+        <body>
+        @for (int i = 0; i < Model.ViewModel!.RiskExpertMarksCategories.Count; ++i)
+        {
+            var riskExpertMarksCategory = Model.ViewModel.RiskExpertMarksCategories[i];
+            <tr>
+                <td style="background-color: #86b7fe">@riskExpertMarksCategory.Name</td>
+                <td style="background-color: #86b7fe">@riskExpertMarksCategory.Value</td>
+                @if (Model.FirstStageSection == SecondStage.FirstStageSection2)
+                {
+                    <td style="background-color: #86b7fe">@riskExpertMarksCategory.Price.ToString("0.##")</td>
+                }
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef1</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef2</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef3</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef4</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef5</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef6</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef7</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef8</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef9</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertCoef10</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.Summary</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage1.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage2.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage3.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage4.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage5.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage6.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage7.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage8.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage9.ToString("0.##")</td>
+                <td style="background-color: #ffcd39">@riskExpertMarksCategory.ExpertMarkWeighedAverage10.ToString("0.##")</td>
+                @if (Model.FirstStageSection == SecondStage.FirstStageSection1)
+                {
+                    <td style="background-color: #ffcd39">@riskExpertMarksCategory.Total.ToString("0.##")</td>
+                }
+                else
+                {
+                    <td style="background-color: #ffcd39">@riskExpertMarksCategory.AdditionalPrice.ToString("0.##")</td>
+                    <td style="background-color: #ffcd39">@riskExpertMarksCategory.EndPrice.ToString("0.##")</td>
+                }
+                <td style="background-color: #ffcd39"/>
+            </tr>
+            for (int j = 0; j < riskExpertMarksCategory.RiskExpertMarksList.Count; ++j)
+            {
+                var riskExpertMarks = riskExpertMarksCategory.RiskExpertMarksList[j];
+                var i1 = i;
+                var j1 = j;
+                <input asp-for="ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].Id" readonly hidden/>
+                <tr style="background-color: #b6d4fe">
+                <td>@riskExpertMarks.Risk!.Content</td>
+                <td>@riskExpertMarks.Risk.Value</td>
+                @if (Model.FirstStageSection == SecondStage.FirstStageSection2)
+                {
+                    <td style="background-color: #86b7fe">@riskExpertMarks.Price.ToString("0.##")</td>
+                }
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark1"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark1.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark2"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark2.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark3"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark3.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark4"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark4.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark5"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark5.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark6"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark6.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark7"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark7.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark8"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark8.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark9"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark9.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>
+                    <input asp-for="@Model.ViewModel.RiskExpertMarksCategories[i1].RiskExpertMarksList[j1].ExpertMark10"
+                           value="@Model.ViewModel.RiskExpertMarksCategories[i].RiskExpertMarksList[j].ExpertMark10.ToString("0.##")"
+                           class="width-50 second-stage-input"/>
+                </td>
+                <td>@riskExpertMarks.Summary.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed1.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed2.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed3.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed4.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed5.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed6.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed7.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed8.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed9.ToString("0.##")</td>
+                <td>@riskExpertMarks.ExpertMarkWeighed10.ToString("0.##")</td>
+                @if (Model.FirstStageSection == SecondStage.FirstStageSection1)
+                {
+                    <td>@riskExpertMarks.Total.ToString("0.##")</td>
+                    <td>@riskExpertMarks.Status</td>
+                }
+                else
+                {
+                    <td>@riskExpertMarks.AdditionalPrice.ToString("0.##")</td>
+                    <td>@riskExpertMarks.EndPrice.ToString("0.##")</td>
+                    <td>@riskExpertMarks.PriceStatus</td>
+                }
+            </tr>
+            }
+        }
+        </body>
+        </thead>
+    </table>
+</form>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $('.cat-form-input').change(function (){
+        $('#cat-form').submit();
+    })
+
+    $('.second-stage-input').change(function (){
+        $('#second-stage-form').submit();
+    })
+</script>

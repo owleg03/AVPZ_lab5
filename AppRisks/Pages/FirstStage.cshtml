@@ -1,0 +1,94 @@
+﻿@page
+@model AppRisks.Pages.FirstStage
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Stage 1.1";
+}
+
+<div asp-validation-summary="All" class="py-2 text-danger"></div>
+
+<form asp-page-handler="Category" id="category-form">
+    <!-- Stage section selection -->
+        @Html.DropDownListFor(
+            m => m.FirstStageSection,
+            new SelectListItem[]
+            {
+                new(FirstStage.FirstStageSection1, FirstStage.FirstStageSection1),
+                new(FirstStage.FirstStageSection2, FirstStage.FirstStageSection2)
+            },
+            new { @class = "form-select mb-3 category-form-input" }
+        )
+</form>
+
+<form asp-page-handler="Values" id="values-form">
+    <input asp-for="FirstStageSection" readonly hidden/>
+    <!-- Stage section table -->
+    <table class="table">
+        <thead>
+        <tr style="background-color: #0d6efd">
+            <th>Ризик</th>
+            <th>Вага</th>
+            <th>Відсоток</th>
+        </tr>
+        <tr/>
+        </thead>
+        <tbody>
+        @{
+            for (int i = 0; i < Model.ViewModel.Categories!.Count; ++i)
+            {
+                var category = Model.ViewModel.Categories[i];
+                <tr style="background-color: #86b7fe">
+                    @{
+                        var iTemp0 = i;
+                    }
+                    <input asp-for="ViewModel.Categories![iTemp0].Id" readonly hidden/>
+                    <input asp-for="ViewModel.Categories![iTemp0].Name" readonly hidden/>
+                    <input asp-for="ViewModel.Categories![iTemp0].Value" readonly hidden/>
+                    <input asp-for="ViewModel.Categories![iTemp0].Percentage" readonly hidden/>
+                    <td>@category.Name</td>
+                    <td>@category.Value</td>
+                    <td>@category.Percentage.ToString("##.##")</td>
+                </tr>
+                for (int j = 0; j < category.Risks.Count; ++j)
+                {
+                    var risk = category.Risks[j];
+                    <tr style="background-color: #b6d4fe">
+                        @{
+                            var iTemp1 = i;
+                            var jTemp = j;
+                        }
+                        <input asp-for="ViewModel.Categories![iTemp1].Risks[jTemp].Id" readonly hidden/>
+                        <input asp-for="ViewModel.Categories![iTemp1].Risks[jTemp].Content" readonly hidden/>
+                        <td>@risk.Content</td>
+                        <td>
+                            <input asp-for="ViewModel.Categories![iTemp1].Risks[jTemp].Value" class="value-form-input"/>
+                        </td>
+                        <td/>
+                    </tr>
+                }
+            }
+        }
+        <tr style="background-color: #0d6efd">
+            <td>Всього</td>
+            <input asp-for="ViewModel.TotalValue" readonly hidden/>
+            <td>
+                @Model.ViewModel.TotalValue
+            </td>
+            <td>100%</td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $('.category-form-input').change(function (){
+        $('#category-form').submit();
+    })
+
+    $('.value-form-input').change(function (){
+        $('#values-form').submit();
+    })
+</script>
